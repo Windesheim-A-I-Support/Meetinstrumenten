@@ -1,0 +1,64 @@
+Hey Monique,
+Ik dacht: ik stuur je even een korte terugkoppeling van ons gesprek. Geen verplichting, gewoon omdat ik denk dat je hiermee misschien wat houvast hebt om de volgende stappen overzichtelijk te maken.
+Je bent bezig met een supermooi project: uitzoeken welke vragenlijsten voor innovatief werkgedrag nou echt goed onderbouwd zijn qua validiteit en betrouwbaarheid. En je doet dat aan de hand van cijfers uit 85 studies (!). Vet, maar ook complex.
+Wat volgens mij handig is om te doen:
+Ik help je om je Excel op te schonen. Jij hoeft niet in CSV’s te gaan rommelen — als jij het bestand deelt, zorg ik dat het netjes en bruikbaar wordt voor verdere analyse.
+We kunnen een klein programmaatje bouwen (bijv. in Jupyter Notebook) dat automatisch de relevante cijfers over verschillende studies vergelijkt, bijvoorbeeld in grafiekjes of tabelletjes. Heel visueel en overzichtelijk.
+Voor de doelen van de studies (die tekstuele kolom), kunnen we AI inzetten om die te clusteren of categoriseren. Daar is een tool als Perplexity juist wél heel goed in.
+Jouw data blijft jouw data. Alles wat ik van je krijg, gebruik ik alleen lokaal en met respect voor je werk. Geen cloud, geen upload, gewoon veilig en transparant.
+Tot slot
+Dinsdag 10 juni om 13:00 staat in de agenda — dan pakken we dit lekker hands-on op. Geen stress als het delen van de data niet lukt voor die tijd; we kunnen het ook live doen. Maar als je wel alvast iets wil sturen, dan kan ik er al mee aan de slag.
+Ik vind dit oprecht een tof project, dus voel je vrij om me erin te betrekken waar je dat handig vindt.
+Groetjes,
+Chris
+PS: Als we dit goed neerzetten, maken we iets wat niet alleen jou helpt, maar ook bruikbaar kan zijn voor anderen in het vakgebied. Dat maakt het extra de moeite waard.
+
+Project Overzicht:
+Doel van Monique’s Onderzoek
+Monique wil op basis van 85 wetenschappelijke studies vaststellen welke bestaande vragenlijst voor innovatief werkgedrag het meest valide en betrouwbaar is. Hiervoor:
+Verzamelt en vergelijkt ze psychometrische gegevens (zoals RMSEA, SRMR, Cronbach’s Alpha) uit de literatuur;
+Wil ze de kwaliteit van meetinstrumenten systematisch in kaart brengen, zodat ze in een volgende fase een eigen gevalideerd meetinstrument kan ontwikkelen;
+Zoekt ze naar betrouwbare manieren om gegevens uit de studies te extraheren, structureren en analyseren, met aandacht voor consistentie in terminologie en getallen;
+Heeft ze als einddoel om een onderbouwd overzicht te creëren van de ‘beste’ bestaande meetinstrumenten – specifiek voor professioneel gebruik (bv. bij verpleegkundigen).
+
+🧩 Wat?
+🎯 Doel
+👤 Wie?
+🛠️ Tools/Oplossing
+Excel-bestand opschonen
+Data structureren voor verdere analyse
+Chris
+Handmatig + export naar CSV
+Parameters uit studies visueel vergelijken
+Inzicht krijgen in betrouwbaarheid/validiteit over meerdere studies
+Chris (initieel)
+Jupyter Notebook + Python
+Doelstellingen van studies categoriseren
+Inhoudelijke clustering van onderzoeksvragen
+Samen (met AI-hulp)
+Perplexity.ai
+Analyse van meetinstrumenten per doelgroep
+Nagaan of bijv. verpleegkundigen specifieke schalen gebruiken
+Monique (inhoudelijk)
+AI als assistent + bronverkenning
+AI als redeneerhulp bij literatuur
+Onderbouwd keuzes maken t.a.v. geschikte vragenlijsten
+Monique met begeleiding
+Perplexity.ai (research body-functie)
+AI vermijden voor numerieke extractie
+Fouten vermijden bij cijfertjes uit tabellen
+-
+Alternatief: Python-scripts
+Data-structuur uniform maken (voor AI & scripts)
+Later makkelijker categoriseren en vergelijken
+Chris
+Pandas + open-source tools
+Afspraak: samen bouwen aan eerste analyse
+Hands-on sessie om het proces te starten
+Samen
+Live sessie op 10 juni 12:00
+Data-beveiliging en vertrouwen
+Vertrouwen borgen over datagebruik en eigenaarschap
+Chris garandeert dit
+Lokale kopie, geen uploads, transparantie
+

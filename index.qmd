@@ -1,0 +1,60 @@
+---
+title: "Analyse Meetinstrumenten Innovatief Werkgedrag"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-title: "Inhoud"
+    number-sections: true
+    df-print: paged
+---
+
+# 🎯 Doel van het Onderzoek
+
+Monique Mensen onderzoekt welke bestaande meetinstrumenten het meest valide en betrouwbaar zijn voor het meten van *innovatief werkgedrag* bij professionals. Het doel is om op basis van 85 studies te bepalen welke vragenlijst als fundament kan dienen voor de ontwikkeling van een nieuw gevalideerd meetinstrument.
+
+## Subdoelen:
+
+- Psychometrische gegevens verzamelen (RMSEA, SRMR, Cronbach’s Alpha, etc.)
+- De kwaliteit van bestaande instrumenten systematisch vergelijken
+- Categoriseren van onderzoeksvragen en doelstellingen
+- Een duidelijk overzicht creëren van de beste meetinstrumenten per doelgroep
+
+# 🛠️ Strategie & Oplossingen
+
+Hieronder een overzicht van de aanpak en wie waarvoor verantwoordelijk is:
+
+| Wat? | Doel | Wie? | Tools/Oplossing |
+|------|------|------|------------------|
+| Excel-bestand opschonen | Data structureren voor verdere analyse | Chris | Handmatig + export naar CSV |
+| Parameters visueel vergelijken | Inzicht in betrouwbaarheid/validiteit over meerdere studies | Chris (initieel) | Jupyter Notebook + Python |
+| Categoriseren van doelen | Clusteren van onderzoeksvragen uit 85 studies | Samen (met AI-hulp) | Perplexity.ai |
+| Analyse per doelgroep | Nagaan welke schalen bijv. voor verpleegkundigen gebruikt worden | Monique (inhoudelijk) | AI als assistent + bronnenonderzoek |
+| AI als redeneerhulp | Onderbouwde keuzes maken en bronnen vinden | Monique + Chris | Perplexity.ai |
+| AI vermijden voor tabellen | Fouten vermijden bij numerieke extractie | - | Python-scripts |
+| Uniform maken datastructuur | Voor latere analyse en AI-ondersteuning | Chris | Pandas, open-source tools |
+| Live sessie 10 juni | Hands-on starten met analyse en categorisatie | Samen | Jupyter, Excel, CSV |
+| Data veilig houden | Vertrouwen borgen over eigenaarschap | Chris garandeert dit | Lokale kopie, geen uploads |
+
+# 📆 Volgende Stappen
+
+- Monique deelt (optioneel) het Excel-bestand of een voorbeeldversie
+- Chris maakt het bestand schoon en analyseerbaar (CSV-formaat)
+- Tijdens de sessie op **10 juni 13:00** starten we hands-on met de categorisatie
+
+# 🤝 Samenwerking
+
+Dit project heeft potentie om niet alleen Monique’s onderzoek te ondersteunen, maar ook breder inzetbaar te worden voor andere onderzoekers die werken met psychometrie. 
+
+Samen kunnen we iets bouwen dat:
+- Wetenschappelijk robuust is
+- Technisch reproduceerbaar
+- Praktisch bruikbaar in onderwijs en onderzoek
+
+# 📬 Contact
+
+Voor vragen, samenwerking of toegang tot de scripts: neem contact op met **Christiaan Verhoef**.
+
+---
+
+Met dank aan Monique voor het delen van haar werk en energie in dit project!
