@@ -1,10 +1,8 @@
 # ==============================================================================
 # Monique IWB Project - Step 1: Load, Convert, and Initial Exploration
 #
-# This script reads the custom Excel file, converts it into a litstudy
-# DocumentSet, and performs a basic timeline analysis to verify the process.
-#
-# v3: Corrected the exact Excel filename.
+# v4: Automatically finds the single Excel file in the 'documenten' folder.
+#     No more manual filename edits required.
 # ==============================================================================
 
 import pandas as pd
@@ -12,20 +10,39 @@ import litstudy
 from pathlib import Path
 
 # --- 1. Configuration ---
-# The script will look for your files in this subfolder
+# The script will search for your Excel file in this subfolder
 DOCUMENTS_DIR = Path("documenten")
-
-# UPDATED: Using the exact filename you provided.
-# Make sure to add the .xlsx extension if your file has one.
-INPUT_EXCEL_FILE = DOCUMENTS_DIR / "06-06-2025 Analyse tabel scoping review MM (2).xlsx"
-
 OUTPUT_DIR = Path("output")
 
 # Ensure the output directory exists
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 
-# --- 2. Define the Column Mapping (ACTION REQUIRED) ---
+# --- 2. Smart File Finder ---
+print(f"--- Searching for Excel file in '{DOCUMENTS_DIR}' folder... ---")
+
+# Look for any files ending in .xlsx or .xls
+excel_files = list(DOCUMENTS_DIR.glob('*.xlsx')) + list(DOCUMENTS_DIR.glob('*.xls'))
+
+# Handle all possible cases
+if len(excel_files) == 0:
+    print(f"\nERROR: No Excel files found in the '{DOCUMENTS_DIR}' folder.")
+    print("Please make sure your Excel file is placed inside that folder.")
+    exit()
+
+if len(excel_files) > 1:
+    print(f"\nERROR: Multiple Excel files found in the '{DOCUMENTS_DIR}' folder:")
+    for f in excel_files:
+        print(f"  - {f.name}")
+    print("\nPlease ensure only ONE Excel file is present in the folder and run again.")
+    exit()
+
+# If we get here, we found exactly one file. This is our target.
+INPUT_EXCEL_FILE = excel_files[0]
+print(f"✓ Automatically detected Excel file: '{INPUT_EXCEL_FILE.name}'")
+
+
+# --- 3. Define the Column Mapping (ACTION REQUIRED) ---
 #
 # This is a PLACEHOLDER. The script will help you fill this out.
 #
@@ -47,20 +64,12 @@ COLUMN_MAPPING = {
 }
 
 
-# --- 3. Load and Validate Data ---
-print(f"Loading data from '{INPUT_EXCEL_FILE}'...")
-if not INPUT_EXCEL_FILE.exists():
-    print(f"\nERROR: Data file not found at the specified path!")
-    print(f"Please double-check the filename and folder structure.")
-    print(f"I am looking for: {INPUT_EXCEL_FILE}")
-    exit()
-
+# --- 4. Load and Validate Data ---
+print(f"\nLoading data from '{INPUT_EXCEL_FILE.name}'...")
 df = pd.read_excel(INPUT_EXCEL_FILE)
 
-# --- 4. SMART CHECK: Find column names and give instructions ---
+# --- 5. SMART CHECK: Find column names and give instructions ---
 print("\n--- Validating Column Mapping ---")
-
-# Check if the user has updated the mapping from its default placeholder state
 is_still_placeholder = COLUMN_MAPPING.get('title') == 'title' and COLUMN_MAPPING.get('authors') == 'authors'
 
 if is_still_placeholder:
@@ -71,29 +80,30 @@ if is_still_placeholder:
         print(f"'{col}'")
     print("----------------------------------------------------")
     print("\nINSTRUCTIONS:")
-    print("1. Open this Python script (`01_load_and_explore.py`) in an editor.")
-    print("2. Find the 'COLUMN_MAPPING' section (around line 30).")
-    print("3. Replace the placeholder names (like 'title', 'authors') with the correct names from the list above.")
+    print("1. Open this Python script in an editor.")
+    print("2. Find the 'COLUMN_MAPPING' section (around line 40).")
+    print("3. Replace the placeholder names (like 'title') with the correct names from the list above.")
     print("4. Save the script and run it again.")
-    exit() # Stop the script gracefully until the user configures it.
+    exit()
 else:
     print("✓ Column mapping has been edited. Proceeding to analysis.")
 
 
-# --- 5. Convert to litstudy DocumentSet ---
+# --- 6. Convert to litstudy DocumentSet ---
 print("\nConverting DataFrame to litstudy.DocumentSet...")
 try:
-    doc_set = litstudy.sources.load_dataframe(df, mapping=COLUMN_M nutty)
-    print("Conversion successful.")
+    # Note: Corrected a typo here from "nutty" to "MAPPING"
+    doc_set = litstudy.sources.load_dataframe(df, mapping=COLUMN_MAPPING)
+    print("✓ Conversion successful.")
 except KeyError as e:
     print(f"\nERROR: A column in your mapping is still incorrect: {e}")
     print("Please double-check your COLUMN_MAPPING variable against the column list.")
     exit()
 
 
-# --- 6. Final Analysis ---
+# --- 7. Final Analysis ---
 print("\n--- Initial Analysis ---")
-print(doc_set)  # Display a summary of the DocumentSet
+print(doc_set)
 
 print("\nGenerating publication timeline plot...")
 fig = litstudy.plot_year_histogram(doc_set)
