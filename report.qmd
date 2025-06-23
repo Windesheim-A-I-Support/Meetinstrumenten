@@ -1,0 +1,98 @@
+---
+title: "Measuring Innovative Work Behavior in Nursing: A Systematic Review of the Literature"
+author: "Monique Mensen"
+date: "today"
+format:
+  pdf:
+    toc: true
+    number-sections: true
+  docx:
+    toc: true
+    number-sections: true
+bibliography: references.bib
+csl: apa.csl
+---
+
+# Introduction
+
+# Methods
+
+## Search Strategy and Selection
+
+## Data Extraction and Analysis
+
+# Results
+
+## Descriptive Analysis of the Literature
+
+The distribution of publications over time is shown in @fig-timeline.
+
+![Publication Timeline](output/01_publication_timeline.png){#fig-timeline fig-cap="Number of publications per year included in the review."}
+
+The global distribution of this research is visualized in @fig-map.
+
+![Geographic Distribution of Studies](output/04_geospatial_outputs/world_map_study_distribution.png){#fig-map fig-cap="World map showing the number of included studies per country."}
+
+## Thematic Analysis: Definitions of Innovation
+
+@fig-innovation-topics provides an interactive visualization of these thematic clusters.
+
+{{< iframe output/02_nlp_outputs/innovation_definitions_interactive_topics.html width="100%" height="600px" >}}
+**Figure 3.** Interactive map of thematic clusters for "Innovation Definitions".
+{#fig-innovation-topics}
+
+A summary of the primary topics is presented in @tbl-innovation-topics.
+
+```{python}
+#| label: tbl-innovation-topics
+#| tbl-cap: "Summary of key themes identified in innovation definitions."
+
+import pandas as pd
+df = pd.read_csv("output/02_nlp_outputs/innovation_definitions_topic_summary.csv")
+df
+```
+
+## Thematic Analysis: IWB Measurement Approaches
+
+```{python}
+#| label: tbl-iwb-measurement-topics
+#| tbl-cap: "Summary of key themes identified in IWB measurement approaches."
+
+import pandas as pd
+df = pd.read_csv("output/02_nlp_outputs/iwb_measurement_topic_summary.csv")
+df
+```
+
+## Thematic Analysis: Theoretical Foundations
+
+```{python}
+#| label: tbl-theoretical-foundations-topics
+#| tbl-cap: "Summary of key themes identified in theoretical foundations."
+
+import pandas as pd
+df = pd.read_csv("output/02_nlp_outputs/theoretical_foundations_topic_summary.csv")
+df
+```
+
+## Psychometric Properties of IWB Instruments
+
+@fig-alpha-comparison shows the distribution of reported Cronbach's Alpha values.
+
+![Comparison of Cronbach's Alpha](output/03_psychometric_outputs/plot_cronbach_alpha_comparison.png){#fig-alpha-comparison fig-cap="Distribution of Cronbach's Alpha values across different IWB measurement instruments."}
+
+A summary of all extracted numerical data can be found in @tbl-psychometrics.
+
+```{python}
+#| label: tbl-psychometrics
+#| tbl-cap: "Extracted psychometric values from the literature."
+
+import pandas as pd
+df = pd.read_csv("output/03_psychometric_outputs/extracted_psychometric_data.csv")
+df
+```
+
+# Discussion
+
+# Conclusion
+
+# References

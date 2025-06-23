@@ -1,0 +1,35 @@
+# Core dependencies
+pandas
+openpyxl
+xlrd
+fitz
+litstudy
+thefuzz
+# Literature analysis
+litstudy==1.0.6
+
+# PDF extraction
+PyMuPDF==1.26.1  # Latest release as of Jun 11, 2025
+
+# NLP & clustering
+scikit-learn
+sentence-transformers
+
+# Visualization
+matplotlib
+seaborn
+plotly
+geopandas
+
+# Jupyter & notebooks
+jupyterlab
+notebook
+nbconvert
+jupyterlab-git
+
+# AI integration (optional)
+openai
+
+# Reporting tools
+quarto
+tqdm

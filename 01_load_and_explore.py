@@ -1,112 +1,113 @@
-# ==============================================================================
-# Monique IWB Project - Step 1: Load, Convert, and Initial Exploration
-#
-# v4: Automatically finds the single Excel file in the 'documenten' folder.
-#     No more manual filename edits required.
-# ==============================================================================
-
+#!/usr/bin/env python3
+import argparse
+import logging
 import pandas as pd
-import litstudy
+import json
 from pathlib import Path
+import litstudy
 
-# --- 1. Configuration ---
-# The script will search for your Excel file in this subfolder
-DOCUMENTS_DIR = Path("documenten")
-OUTPUT_DIR = Path("output")
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+log = logging.getLogger(__name__)
 
-# Ensure the output directory exists
-OUTPUT_DIR.mkdir(exist_ok=True)
+def find_excel_file(directory: Path):
+    exts = ("*.xlsx", "*.xls", "*.xlsm")
+    files = []
+    for ext in exts:
+        files.extend(directory.glob(ext))
+    names = [f for f in files if f.is_file()]
+    if len(names) == 0:
+        log.error("No Excel files found in %r", directory)
+        return None
+    if len(names) > 1:
+        log.error("Multiple Excel files found in %r: %s", directory, [f.name for f in names])
+        return None
+    return names[0]
 
+def main():
+    # → 1. Parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--docs", type=Path, default=Path("documenten"), help="Folder with Excel")
+    parser.add_argument("--out",  type=Path, default=Path("output"), help="Output folder")
+    parser.add_argument("--save-mapping", action="store_true", help="Save COLUMN_MAPPING to JSON")
+    args = parser.parse_args()
 
-# --- 2. Smart File Finder ---
-print(f"--- Searching for Excel file in '{DOCUMENTS_DIR}' folder... ---")
+    args.out.mkdir(exist_ok=True, parents=True)
 
-# Look for any files ending in .xlsx or .xls
-excel_files = list(DOCUMENTS_DIR.glob('*.xlsx')) + list(DOCUMENTS_DIR.glob('*.xls'))
+    # → 2. Locate file
+    log.info("Searching for Excel in %r...", args.docs)
+    excel = find_excel_file(args.docs)
+    if not excel:
+        return
 
-# Handle all possible cases
-if len(excel_files) == 0:
-    print(f"\nERROR: No Excel files found in the '{DOCUMENTS_DIR}' folder.")
-    print("Please make sure your Excel file is placed inside that folder.")
-    exit()
+    log.info("Found Excel file: %s", excel.name)
 
-if len(excel_files) > 1:
-    print(f"\nERROR: Multiple Excel files found in the '{DOCUMENTS_DIR}' folder:")
-    for f in excel_files:
-        print(f"  - {f.name}")
-    print("\nPlease ensure only ONE Excel file is present in the folder and run again.")
-    exit()
+    # → 3. Load DataFrame
+    try:
+        df = pd.read_excel(excel)
+    except Exception as e:
+        log.error("Failed to load Excel: %s", e)
+        return
 
-# If we get here, we found exactly one file. This is our target.
-INPUT_EXCEL_FILE = excel_files[0]
-print(f"✓ Automatically detected Excel file: '{INPUT_EXCEL_FILE.name}'")
+    # → 4. Setup mapping
+    COLUMN_MAPPING = get_mapping_example()  # Replace with your actual mapping
 
+    # Validate mapping
+    dfcols = set(df.columns)
+    mapped = set(COLUMN_MAPPING.values())
+    missing = mapped - dfcols
+    if missing:
+        log.error("Mapping references missing columns: %s", missing)
+        log.info("Available columns: %s", dfcols)
+        return
+    log.info("Column mapping validated!")
 
-# --- 3. Define the Column Mapping (ACTION REQUIRED) ---
-#
-# This is a PLACEHOLDER. The script will help you fill this out.
-#
-COLUMN_MAPPING = {
-    # --- Standard Bibliographic Fields ---
-    'title':    'title',              # <-- EDIT THIS
-    'authors':  'authors',            # <-- EDIT THIS
-    'year':     'year',               # <-- EDIT THIS
-    'abstract': 'abstract',           # <-- EDIT THIS (Optional but recommended)
-    'keywords': 'keywords',           # <-- EDIT THIS (Optional)
-    'doi':      'doi',                # <-- EDIT THIS (Optional)
+    if args.save_mapping:
+        outmap = args.out / "column_mapping.json"
+        json.dump(COLUMN_MAPPING, open(outmap, "w"), indent=2)
+        log.info("Saved mapping to %s", outmap)
 
-    # --- Monique's Custom Research Columns ---
-    # We map these to custom fields within litstudy for later analysis.
-    'iwb_related_factors': 'Kolom G',  # <-- EDIT THIS (Factors related to IWB)
-    'innovation_definitions': 'Kolom I',  # <-- EDIT THIS (Definitions of "innovation")
-    'iwb_measurement': 'Kolom J',      # <-- EDIT THIS (IWB definitions, dimensions, questionnaires)
-    'theoretical_foundations': 'Kolom K',# <-- EDIT THIS (Theories and disciplines)
-}
+    # → 5. Convert to litstudy
+    try:
+        docs = litstudy.sources.load_dataframe(df, mapping=COLUMN_MAPPING)
+    except KeyError as e:
+        log.error("Column mapping error: %s", e)
+        return
+    log.info("Loaded %d documents via litstudy", len(docs))
 
+    # → 6. Generate plots
+    plotters = {
+        "01_timeline": litstudy.plot_year_histogram,
+        "02_affiliations": litstudy.plot_affiliation_histogram,
+        "03_authors": litstudy.plot_author_histogram,
+    }
+    for fname, fn in plotters.items():
+        try:
+            fig = fn(docs)
+            p = args.out / f"{fname}.png"
+            fig.savefig(p, dpi=300, bbox_inches="tight")
+            log.info("Saved %s", p)
+        except Exception as e:
+            log.warning("Plot %s failed: %s", fname, e)
 
-# --- 4. Load and Validate Data ---
-print(f"\nLoading data from '{INPUT_EXCEL_FILE.name}'...")
-df = pd.read_excel(INPUT_EXCEL_FILE)
+    # → 7. Optional: Topic modeling
+    try:
+        corpus = litstudy.build_corpus(docs, ngram_threshold=0.8)
+        tm = litstudy.train_nmf_model(corpus, num_topics=8)
+        litstudy.plot_word_distribution(corpus, limit=30, title="Top words in corpus")
+        p = args.out / "04_word_dist.png"
+        import matplotlib.pyplot as plt; plt.savefig(p, dpi=300, bbox_inches="tight")
+        log.info("Saved word distribution: %s", p)
+    except Exception as e:
+        log.warning("Topic modeling skipped: %s", e)
 
-# --- 5. SMART CHECK: Find column names and give instructions ---
-print("\n--- Validating Column Mapping ---")
-is_still_placeholder = COLUMN_MAPPING.get('title') == 'title' and COLUMN_MAPPING.get('authors') == 'authors'
+if __name__ == "__main__":
+    main()
 
-if is_still_placeholder:
-    print("\nACTION REQUIRED: Please configure the COLUMN_MAPPING in this script.")
-    print("I have found the following columns in your Excel file:")
-    print("----------------------------------------------------")
-    for col in df.columns:
-        print(f"'{col}'")
-    print("----------------------------------------------------")
-    print("\nINSTRUCTIONS:")
-    print("1. Open this Python script in an editor.")
-    print("2. Find the 'COLUMN_MAPPING' section (around line 40).")
-    print("3. Replace the placeholder names (like 'title') with the correct names from the list above.")
-    print("4. Save the script and run it again.")
-    exit()
-else:
-    print("✓ Column mapping has been edited. Proceeding to analysis.")
+# (This goes at the end of your 01_load_and_explore.py script)
 
-
-# --- 6. Convert to litstudy DocumentSet ---
-print("\nConverting DataFrame to litstudy.DocumentSet...")
-try:
-    # Note: Corrected a typo here from "nutty" to "MAPPING"
-    doc_set = litstudy.sources.load_dataframe(df, mapping=COLUMN_MAPPING)
-    print("✓ Conversion successful.")
-except KeyError as e:
-    print(f"\nERROR: A column in your mapping is still incorrect: {e}")
-    print("Please double-check your COLUMN_MAPPING variable against the column list.")
-    exit()
-
-
-# --- 7. Final Analysis ---
-print("\n--- Initial Analysis ---")
-print(doc_set)
-
-print("\nGenerating publication timeline plot...")
-fig = litstudy.plot_year_histogram(doc_set)
-output_path = OUTPUT_DIR / "01_publication_timeline.png"
-fig.savefig(output_path, dpi=300, bbox_inches='tight')
-print(f"✓ SUCCESS! Timeline plot saved to: {output_path}")
+# --- 8. Save the Cleaned DocumentSet for the next script ---
+print("\nSaving cleaned DocumentSet for the next script...")
+output_docset_path = OUTPUT_DIR / "01_cleaned_doc_set.pkl"
+litstudy.save_document_set(doc_set, output_docset_path)
+print(f"✓ Clean data saved to: {output_docset_path}")
