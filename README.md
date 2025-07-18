@@ -155,3 +155,69 @@ De technische fase is voorbij. De weg vooruit is inhoudelijk, iteratief en gefoc
 
 #### Stap C: Rapportage Afronden
 -   Vul het `report.qmd`-bestand met de interpretatie, discussie en conclusies op basis van de outputs uit Stap B.
+
+CTT (Classical Test Theory)
+
+A theory of measurement based on the idea that an observed score is the sum of a true score and an error component (Observed Score = True Score + Error). It focuses on the reliability of the total test.
+
+IRT (Item Response Theory)
+
+A modern measurement theory that models the relationship between a person's underlying ability and their probability of getting an individual item correct. It focuses on item-level statistics.
+
+RASCH Model
+
+The simplest form of IRT. It is a one-parameter model that characterizes each item only by its difficulty, assuming all items discriminate equally.
+
+INFIT and OUTFIT Mean Squares
+
+Fit statistics used in the Rasch model to check if individual items fit the model's expectations.
+
+INFIT: Inlier-sensitive fit, focusing on responses from people whose ability is near the item's difficulty.
+
+OUTFIT: Outlier-sensitive fit, more influenced by unexpected responses.
+
+Acceptable Range: Values for both should be between 0.5 and 1.5.
+
+EFA (Exploratory Factor Analysis)
+
+A statistical method used to uncover the underlying factor structure of a set of variables when you do not have a prior hypothesis about that structure.
+
+PFA (Principal Factor Analysis)
+
+A specific extraction method used to perform an Exploratory Factor Analysis. It focuses on shared variance among variables to identify latent factors.
+
+CFA (Confirmatory Factor Analysis)
+
+A statistical method used to test a pre-specified hypothesis about the factor structure of a set of variables. It confirms if the data fits a proposed model.
+
+CFI (Comparative Fit Index)
+
+An incremental fit index used in CFA. It compares the fit of a target model to the fit of a null model where variables are uncorrelated.
+
+Cut-off for good fit: > 0.95
+
+TLI (Tucker-Lewis Index)
+
+An incremental fit index similar to the CFI. It also compares the proposed model to a null model, with an added penalty for model complexity.
+
+Cut-off for good fit: > 0.95
+
+RMSEA (Root Mean Square Error of Approximation)
+
+An absolute fit index that measures the discrepancy between the proposed model and the population covariance matrix, adjusted for model complexity.
+
+Cut-off for good fit: < 0.06
+
+SRMR (Standardized Root Mean Square Residual)
+
+Represents the average standardized difference between the observed correlations in the data and the correlations predicted by the model.
+
+Cut-off for good fit: < 0.08
+
+Z-Standardized Values (Z-scores)
+
+A value that has been rescaled to indicate how many standard deviations it is from the mean of its dataset. The new mean is 0 and the standard deviation is 1.
+
+EVA
+
+This is not a standard acronym in this context and is likely a typo for EFA.
