@@ -11,6 +11,97 @@ Monique Mensen
 Lecturer and Researcher, Lectoraat Supply Chain Finance  
 Windesheim University of Applied Sciences
 
+# Core Problems and Bottlenecks in Academic Data Extraction Projects
+
+## Academic Challenges
+
+### Semantic Ambiguity and Inconsistent Terminology
+
+A pervasive challenge is that different researchers often use varied terms for the same concept, causing confusion and missed connections. For example, in an *Innovative Work Behavior (IWB)* literature review, one study might report a reliability metric as “Cronbach’s alpha” while another refers to the exact same statistic as “internal consistency” or “internal reliability.” In one case, three different papers used three different names for the **same** number – all referring to an identical measurement of reliability. 
+
+This semantic inconsistency means an automated search or extraction can easily overlook relevant data if it doesn’t account for synonyms or variant phrasings. The problem generalizes to other fields as well; for instance, in Supply Chain Finance, the practice known as “Supply Chain Finance” might also be called “Supplier Finance” or “Reverse Factoring” – different names for the same solution. Such ambiguity makes it difficult to aggregate and compare findings across sources, since one must recognize when two terms actually refer to one shared concept.
+
+### Manual, Labor-Intensive Workflows (Excel-Based Research)
+
+Academic data extraction projects today often rely on painstaking manual effort. Researchers frequently collect data from papers by reading and copying values into spreadsheets or tables by hand. In the IWB case, key metrics were copied manually from each article into Excel. This is a common scenario in literature reviews and meta-analyses: dozens of PDF articles are combed through, and key statistics are transcribed into Excel or Word.
+
+Not only is this tedious and time-consuming, it’s also error-prone. Typos or transcription errors can slip in unnoticed, and important context from the source may be lost. Even when done carefully, manual data entry carries a higher risk of mistakes and inconsistencies. For example, nearly **30%** of published papers with Excel gene lists were found to contain mangled gene names due to spreadsheet autocorrect errors — illustrating how fragile Excel workflows can be for data integrity.
+
+Beyond accuracy, these manual processes don’t scale. A task feasible (if unpleasant) for 50 papers becomes virtually impossible for 500. Researchers often end up limiting the scope of their analysis or spending disproportionate effort on grunt work, which is a direct consequence of inefficient workflows.
+
+### Lack of Provenance and Traceability
+
+When data is extracted by hand and compiled in a custom spreadsheet, it often loses clear links to its original source. In academic workflows today, it’s uncommon to see each cell of a summary table explicitly tied to the paper and page it came from. This makes verification difficult: if a number looks surprising or needs double-checking, one must manually dig back through the papers to find it again.
+
+It also undermines trust and transparency — without provenance, colleagues or peer reviewers have to trust that all numbers were transcribed correctly and pertain to the stated references. Anyone revisiting the data faces a time-intensive task to reconstruct the extraction context.
+
+### Reproducibility and Update Challenges
+
+Because of the issues above, academic data extraction projects often suffer from poor reproducibility. If another researcher (or even the original researcher, at a later date) tries to replicate the extracted dataset, there’s no guarantee they would end up with the same results. Minor differences in how a term is interpreted or which numbers are recorded can lead to divergent outcomes. 
+
+For instance, if the inclusion criteria for which metrics to extract aren’t rigorously documented, two people summarizing the same set of papers might pick out slightly different statistics. Furthermore, manual extraction lacks an automatic “paper trail” of operations, so there is no log of steps to replay. This makes it laborious to incorporate new literature: adding one more study means repeating a lot of the manual steps, and potentially redoing analyses from scratch.
+
+In fields where evidence is rapidly evolving (say, new financial regulations affecting supply chain finance, or new studies on a behavioral metric), this inability to seamlessly update the dataset can result in analyses going stale. The cost of re-gathering data is so high that many academic reviews simply freeze their dataset at a point in time.
+
+The broader implication is a reproducibility crisis in microcosm – if these projects aren’t overhauled, the findings may not hold up as reliable because they are built on fragile, non-repeatable extraction processes.
+
+## Technical Challenges
+
+### Brittleness of Regex and Rule-Based Extraction
+
+Many early attempts at automating data extraction rely on regular expressions or hard-coded rules tailored to known document layouts. While these methods can work for very structured sources (e.g., a data table in a consistent format), they struggle with the variability found in academic papers.
+
+Research articles come in a multitude of formats – different publishers, column layouts, fonts, and phrasing styles – so a regex that detects a metric in one paper might fail completely on another. For example, a simple regex to find “Cronbach’s α = …” will miss cases where the author wrote “(alpha)”, or formatted the value in a table cell, or used a synonym like “reliability = …”.
+
+Template-based approaches assume a constant structure, but academic documents rarely adhere to one uniform template. As a result, a rule-based script often needs constant maintenance, adding new patterns for each new paper encountered – a brittle and unsustainable approach.
+
+Moreover, PDFs themselves encode text in sometimes unpredictable ways (columns, hyphenation, encoding issues), so regex patterns might not even see the content in the expected order. This technical bottleneck means that purely rule-based automation hits a ceiling in effectiveness, often catching only the low-hanging fruit and requiring human intervention for anything that deviates from the norm.
+
+### Unstructured Source Data and Document Complexity
+
+Academic documents (and many business documents in fields like finance) are fundamentally unstructured from a machine’s point of view. They mix narrative text with tables, figures, and references. Important data might be buried in a paragraph, inside a table, or even in an image (like a chart or scanned form).
+
+Parsing PDFs – which were designed for faithful human viewing, not data interchange – is notoriously hard. In fact, creating a universal algorithm to perfectly convert arbitrary PDFs into clean text or data is sometimes compared to the difficulty of achieving full self-driving cars in complexity. Tools exist to extract text, but they can mangle the order or lose context (for example, mixing columns out of sequence or misreading special characters).
+
+If some papers are scanned images (common in older literature or certain fields), then OCR is needed, introducing another layer of potential errors (misrecognized characters, etc.). All these factors mean that technical solutions face an uphill battle just to *read* the source material correctly. 
+
+Data extraction systems must be robust to myriad formatting idiosyncrasies, or risk silently dropping or scrambling key information. Without addressing this, any automated pipeline will have blind spots – portions of the data that it simply can’t handle without manual cleanup.
+
+### Scalability and Performance Constraints
+
+Even if basic extraction can be automated on a small scale, scaling up to large document sets is a significant technical challenge. Processing 80 PDFs one by one might be manageable, but what about 800 or 8,000? The computational load (and time required) grows with each document, and naive approaches could become unbearably slow or expensive.
+
+Large-scale text extraction may require distributed computing or specialized indexing to avoid bottlenecks. There’s also the challenge of scaling the *accuracy*: a method that works 90% of the time still yields errors in 10% of documents – across thousands of papers that means many problematic outputs to manually fix.
+
+In supply chain finance use-cases, one might have to ingest streams of contracts or invoices continuously; the extraction system needs to cope with throughput and not fall behind. If the current approach is manual or semi-manual, scaling at all is nearly impossible – adding manpower linearly is often not feasible in academic contexts due to limited research assistance.
+
+Thus, without technical advancement, projects remain stuck in “pilot scale.” The inability to scale means valuable data trapped in literature or documents stays inaccessible at larger volumes, and analyses that require big samples or comprehensive coverage can’t be performed reliably.
+
+### Tooling Fragmentation and Integration Gaps
+
+The technology ecosystem for these projects is often fragmented, forcing researchers to juggle multiple tools and formats. One person’s workflow might involve a PDF reader for highlighting text, an Excel sheet for storing extracted numbers, a statistical software (like SPSS or R) for analysis, and maybe a reference manager for citations – none of which talk to each other seamlessly.
+
+In the IWB case study, even the guidance on tools was fragmented: Monique’s advisor suggested she use a note-taking app (Microsoft OneNote) to organize her data, while a support engineer pointed her towards writing code in a Jupyter Notebook. Meanwhile, she was already working in Excel. This kind of disjointed tooling leads to constant friction: exporting data from one tool and importing into another, re-formatting outputs, copying and pasting between applications.
+
+Every handoff is an opportunity for error (e.g., copying the wrong cell range, or a formatting issue causing data misalignment). It also raises the technical barrier – a researcher has to be proficient in several environments or rely on others for help. The lack of an integrated platform means there’s no single source of truth for the project’s data; updates or corrections in one place may not propagate to others.
+
+Without solving this, any attempt at automation will be only partial – like automating one step of a pipeline that still breaks when the output is manually fed into the next tool. Fragmentation ultimately slows down progress and makes the entire process fragile.
+
+### Data Fidelity and Quality Concerns with Advanced Tools
+
+A tempting solution to some of the above is to use AI or machine learning (for example, employing a language model to read papers and extract values). However, current AI tools come with their own reliability issues. Large language models can *appear* very competent at reading text, but they are known to hallucinate or make up content, especially when asked to extract structured data they weren’t explicitly trained to handle.
+
+In a discussion about applying AI, the support engineer cautioned that using a GPT-like model to fill a table is “not a good option” because the model might **guess** or alter the data rather than accurately report it. In one example, simply asking an AI to reproduce a numeric table without changes led it to output altered numbers – a disastrous outcome for data fidelity.
+
+This highlights a technical pitfall: many AI systems lack a notion of provenance or verification, so their answers cannot be trusted in a critical data pipeline without additional checks. Ensuring quality and correctness of extracted data is therefore a big technical hurdle.
+
+### Implications
+
+Ignoring these technical challenges means any attempt to modernize academic workflows will remain brittle and unreliable. Automation might work in demos but break down in real-world variability. Projects will struggle to move beyond small-scale prototypes, and the dream of AI-assisted literature analysis or document processing will keep hitting practical roadblocks.
+
+In the worst case, flawed automation could introduce new errors into research rather than eliminating them. Overall, not overcoming these bottlenecks leaves us stuck with the status quo: fragmented tools and manual effort, with all the inefficiency and risk that entails.
+
+
 ## Objective
 Systematically analyze and compare existing questionnaires used to measure Innovative Work Behavior (IWB) among nurses, with the goal of identifying valid and reliable instruments and building a foundation for a new context-specific questionnaire for community nursing.
 
